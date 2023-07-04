@@ -1,5 +1,6 @@
 <template>
-    <el-form ref="ruleFormRef" :model="ruleForm" :rules="rules" class="demo-ruleForm custom-form" label-width="50px" status-icon size="small">
+    <el-form ref="ruleFormRef" :model="ruleForm" :rules="rules" class="demo-ruleForm custom-form" label-width="50px"
+        status-icon size="small">
         <el-form-item label="省份" prop="classify_province" class="custom-form-item">
             <el-select v-model="ruleForm.classify_province" placeholder="请选择省份" @change="getTypes()">
                 <el-option v-for="item in province_options" :key="item.value" :label="item.label" :value="item.value">
@@ -9,10 +10,8 @@
 
         <el-form-item label="类型" prop="classify_type" class="custom-form-item">
             <el-select v-model="ruleForm.classify_type" placeholder="请选择学科类型">
-                <el-option
-                    v-for="item in type_options"
-                    :key="item.value" :label="item.label" :value="item.value"
-                ></el-option>
+                <el-option v-for="item in type_options" :key="item.value" :label="item.label"
+                    :value="item.value"></el-option>
             </el-select>
         </el-form-item>
 
@@ -142,7 +141,7 @@ const submitForm = async (formEl: FormInstance | undefined) => {
     })
     let j = 0
     for (let i = 0; i < province_scores.length; i++) {
-        if ( average_score[i] <= input_score && average_score[i] != 0 ) {
+        if (average_score[i] <= input_score && average_score[i] != 0) {
             filter_name.push(province_scores[i].name)
             bus_filter_data.push(filter_score[i])
             //根据输入分数和平均分数的差值来判断颜色
@@ -154,17 +153,17 @@ const submitForm = async (formEl: FormInstance | undefined) => {
                 color_mark.push('green')
             }
             console.log(input_score - average_score[i], color_mark);
-            
-        }        
+
+        }
     }
     for (let i = 0; i < filter_name.length; i++) {
-        bus_data.push({ name: filter_name[i], attributes: bus_filter_data[i] , color: color_mark[i]})
+        bus_data.push({ name: filter_name[i], attributes: bus_filter_data[i], color: color_mark[i] })
     }
     console.log(bus_data);
-    bus.emit('submitForm', bus_data)    
+    bus.emit('submitForm', bus_data)
 }
 
-function getTypes(){
+function getTypes() {
     type_options.value = []
     let province_name = ruleForm.classify_province
     let province_data
@@ -174,7 +173,7 @@ function getTypes(){
     colleges_type = Array.from(new Set(province_scores[0].attributes.map(((item: { type: any }) => {
         return item.type
     }))))
-    for (let i=0 ; i < colleges_type.length; i++) {
+    for (let i = 0; i < colleges_type.length; i++) {
         type_options.value.push({ value: colleges_type[i], label: colleges_type[i] })
     }
 }
@@ -196,7 +195,7 @@ onUpdated(() => {
 }
 
 .el-input__wrapper {
-    height:20px;
+    height: 20px;
 }
 
 .custom-form-item {
