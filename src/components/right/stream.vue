@@ -16,7 +16,7 @@ function streamGragh() {
     bus.on('province', data => {
         // console.log(data[0]);
         d3.selectAll('#stream svg').remove()
-        const keys = ['GDP(亿元)','cost(元)','employment(万人)','income(元)','population(万人)']
+        const keys = ['GDP(亿元)', 'cost(元)', 'employment(万人)', 'income(元)', 'population(万人)']
         const dom = document.getElementById('stream')
         const margin = { top: 30, right: 30, bottom: 30, left: 50 }
         const width = dom.clientWidth - margin.left - margin.right
@@ -73,6 +73,26 @@ function streamGragh() {
             .on('mouseout', function (event, d) {
                 d3.selectAll('path').style('opacity', 1)
             })
+
+        const legend = svg.append('g')
+            .attr('transform', (d, i) => `translate(${i * 100 - 40}, -20)`)
+            .selectAll('g')
+            .data(keys)
+            .join('g')
+            .attr('transform', (d, i) => `translate(${i * 40}, 0)`);
+
+        legend.append('rect')
+            .attr('width', 10)
+            .attr('height', 10)
+            .attr('fill', color)
+
+        //添加文字缩写，分别代表GDP、cost、employment、income、population
+        const text = ['GDP', 'COST', 'EMP', 'IN', 'POPU']
+        legend.append('text')
+            .attr('x', 10)
+            .attr('y', 10)
+            .attr('font-size', 10)
+            .text((d, i) => text[i])
     })
 }
 

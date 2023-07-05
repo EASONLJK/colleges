@@ -26,8 +26,10 @@ function lineUp() {
     console.log(parallel_data[3]);
     data = parallel_data[3].map(item => {
       return {
-        a: item.name,
-        d: item.nature_name,
+        school_name: item.name,
+        nature_name: item.nature_name,
+        // school_level_name: item.school_level_name,
+        // type_name: item.type_name,
         // cat: item[2],
         // cat2: item[3]
       }
