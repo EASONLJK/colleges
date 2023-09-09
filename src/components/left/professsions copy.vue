@@ -1,6 +1,6 @@
 <template>
     <div id="profession">
-        <div class="zoom"></div>
+
     </div>
 </template>
 
@@ -66,12 +66,13 @@ function _chart() {
     // Add a filled or stroked circle.
     node.append("circle")
         .attr("fill", d => d.children ? "#fff" : "#ddd")
+        .attr("stroke", d => d.children ? "#bbb" : null)
         .attr("r", function (d) {
             //对数据过滤，只显示第一层的数据，再根据点击事件过滤出当前节点的子节点
             if (d.depth == 1) {
                 return d.r
             }
-        })
+        });
 
     const text = node
         .filter(d => d.depth === 1)
@@ -85,13 +86,14 @@ function _chart() {
         .attr("x", 0)
         .attr("y", (d, i, nodes) => `${i - nodes.length / 2 + 0.8}em`)
         .text(d => d)
-        .style("font-size", function (d) {
-            // 根据圆的半径来计算tspan的大小，tspan的大小不能超过圆的长
-            let r = d3.select(this.parentNode).datum().r * 1.5
-            let len = d.length
-            let size = r / len
-            return `${size}px`
-        });
+        .style("font-size", function(d) {
+        // 根据圆的半径来计算tspan的大小，tspan的大小不能超过圆的长
+        let r = d3.select(this.parentNode).datum().r*1.5
+        let len = d.length
+        let size = r / len
+        return `${size}px`
+
+    });
 
     // 添加交互，点击当前circle，过滤出当前节点数据
     node.on('click', function () {
@@ -124,37 +126,13 @@ function _chart() {
                 _chart()
             }
         })
-
-    // 为最后一层circle添加背景色，按照value值的大小，颜色越深
-    let color = d3.scaleLinear()
-        .domain([0, d3.max(root.leaves(), d => d.value)])
-        .range(["#fff", "#69b3a2"])
-
+    
+    //为最里面circle添加颜色
     node.filter(d => !d.children)
-        //选中g中的circle
-        .select('circle')
-        .attr("fill", d => color(d.value))
-
-    let legend = svg.append('g')
-        .attr('transform', `translate(${margins.left - 10},${margins.top - 10})`)
-        .selectAll()
-        .data(color.ticks(9).slice(1).reverse())
-        .join('g')
-        .attr('transform', (d, i) => `translate(0,${i * 10})`)
-    const value = ['A+', 'A', 'A-', 'B+', 'B', 'B-', 'C+', 'C', 'C-']
-    legend.append('rect')
-        .attr('width', 10)
-        .attr('height', 10)
-        .attr('fill', color)
-
-    legend.append("g")
-        .attr("transform", `translate(12,6)`)
-        .append('text')
-        .text((d, i) => value[i])
-        .attr('font-size', '6px')
-        .attr('fill', 'black')
-        .attr('text-anchor', 'start')
-
+        .attr('fill', function (d) {
+            let color = d3.scaleOrdinal(d3.schemeCategory10)
+            return color(d.parent.data.name)
+        })
 }
 
 onMounted(() => {

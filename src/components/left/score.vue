@@ -101,7 +101,7 @@ const submitForm = async (formEl: FormInstance | undefined) => {
     if (!formEl) return
     formEl.validate((valid, fields) => {
         if (valid) {
-            console.log('submit!')
+            console.log('success submit!')
         } else {
             console.log('error submit!', fields)
         }
@@ -120,7 +120,8 @@ const submitForm = async (formEl: FormInstance | undefined) => {
     var average_score: number
     var bus_filter_data = []
     var bus_data = []
-    var color_mark = []
+    // var color_mark = []
+    var probability = []
     filter_score = province_scores.map((item: { attributes: any }) => item.attributes.filter(
         (item: { type: any }) => item.type == type
     ))
@@ -140,27 +141,47 @@ const submitForm = async (formEl: FormInstance | undefined) => {
             return Math.round(sum / count)
         }
     })
-    console.log(province_scores.length);
     
     let j = 0
     for (let i = 0; i < province_scores.length; i++) {
-        if ( average_score[i] <= input_score && average_score[i] != 0 ) {
+        if ( average_score[i] <= input_score ) {
             filter_name.push(province_scores[i].name)
             bus_filter_data.push(filter_score[i])
-            //根据输入分数和平均分数的差值来判断颜色
             if (input_score - average_score[i] <= 10) {
-                color_mark.push('red')
+                probability.push({
+                    //name为学校名称，value为概率，四个等级，冲63、保62、稳61、不招生64
+                    name: province_scores[i].name,
+                    value: 63
+                })
+                // color_mark.push('red')
+            
+            } else if (input_score - average_score[i] == input_score) {
+                // color_mark.push('gray')
+                probability.push({
+                    name: province_scores[i].name,
+                    prob_name: 64
+                })
             } else if (input_score - average_score[i] <= 20) {
-                color_mark.push('yellow')
+                // color_mark.push('yellow')
+                probability.push({
+                    name: province_scores[i].name,
+                    prob_name: 62
+                })
             } else {
-                color_mark.push('green')
+                // color_mark.push('green')
+                probability.push({
+                    name: province_scores[i].name,
+                    prob_name: 61
+                })
             }
         }        
     }
+
     for (let i = 0; i < filter_name.length; i++) {
-        bus_data.push({ name: filter_name[i], attributes: bus_filter_data[i] , color: color_mark[i]})
+        bus_data.push({ name: filter_name[i], attributes: bus_filter_data[i] , probability: probability[i]})
     }
     console.log(bus_data);
+    
     bus.emit('submitForm', bus_data)    
 }
 

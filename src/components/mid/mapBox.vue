@@ -1,5 +1,7 @@
 <template>
-  <div id="map"></div>
+
+    <div id="map"></div>
+
 </template>
 
 <script setup lang="ts">
@@ -22,7 +24,7 @@ function Map() {
     province_data: [],
     province_geo: []
   })
-  
+
   let url = "http://127.0.0.1:5000/mapbox/"
   //get多个请求，获取多个数据
   axios.all([axios.get(url + "china"), axios.get(url + "point"), axios.get(url + "china_province"), axios.get(url + 'province_city'), axios.get(url + 'province_china'), axios.get(url + 'province_datas')]).then(axios.spread((china, point, china_province, province_city, province_china, province_data) => {
@@ -35,20 +37,20 @@ function Map() {
     province_datas = province_data.data
 
     //34个较淡的颜色，适应白色背景
-    const colors = ['#FFC0CB', '#FFB6C1', '#FF69B4', '#FF1493', '#DB7093', '#C71585', '#FFA07A', '#FA8072', '#E9967A', '#F08080', '#CD5C5C', '#DC143C', '#FF0000', '#B22222', '#8B0000', '#FFA500', '#FF8C00', '#FF7F50', '#FF6347', '#FF4500', '#FFD700', '#FFFF00', '#FFFFE0', '#FFFACD', '#FAFAD2', '#FFEFD5', '#FFE4B5', '#FFDAB9', '#EEE8AA', '#F0E68C', '#BDB76B', '#ADFF2F', '#7FFF00', '#7CFC00']
-    
+    // const colors = ['#FFC0CB', '#FFB6C1', '#FF69B4', '#FF1493', '#DB7093', '#C71585', '#FFA07A', '#FA8072', '#E9967A', '#F08080', '#CD5C5C', '#DC143C', '#FF0000', '#B22222', '#8B0000', '#FFA500', '#FF8C00', '#FF7F50', '#FF6347', '#FF4500', '#FFD700', '#FFFF00', '#FFFFE0', '#FFFACD', '#FAFAD2', '#FFEFD5', '#FFE4B5', '#FFDAB9', '#EEE8AA', '#F0E68C', '#BDB76B', '#ADFF2F', '#7FFF00', '#7CFC00']
+
     //obj.province_geo的features中的propert
-    obj.province_geo.features.forEach((item : { properties: { color: any; }; }, index: number) => {
-      item.properties.color = colors[index]
+    obj.province_geo.features.forEach((item: { properties: { color: any; }; }, index: number) => {
+      // item.properties.color = colors[index]
     })
 
     mapboxgl.accessToken = 'pk.eyJ1IjoiZWFzb25samsiLCJhIjoiY2xpMTQ4dDB3MXU2cDNkbXd6ZmlyNjgwZyJ9.H9xtQwGfuWDYsmVZHwMXAg';
     const map = new mapboxgl.Map({
       container: 'map',
       // Choose from Mapbox's core styles, or make your own style with Mapbox Studio
-      style: 'mapbox://styles/mapbox/light-v11',
+      style: 'mapbox://styles/mapbox/light-v10',
       center: [103.4, 36.03],
-      zoom: 4,
+      zoom: 3,
       logoPosition: 'bottom-right',
     });
 
@@ -63,7 +65,8 @@ function Map() {
         },
         layout: {},
         paint: {
-          'fill-color': 'grey',
+          //颜色设置为浅灰色
+          'fill-color': '#B0C4DE',
           'fill-opacity': 0.8
         }
       });
@@ -79,8 +82,8 @@ function Map() {
         },
         layout: {},
         paint: {
-          'fill-color': ['get', 'color'],
-          'fill-opacity': 0.8
+          // 'fill-color': ['get', 'color'],
+          'fill-opacity': 0.4
         }
       });
 
@@ -102,25 +105,25 @@ function Map() {
 
 
     //绘制每个省城市边界
-    map.on('load', () => {
-      obj.province_data.forEach((item: any) => {
-        let data = item
-        map.addLayer({
-          id: item.name,
-          type: 'line',
-          source: {
-            type: 'geojson',
-            data: data
-          },
-          layout: {
-          },
-          paint: {
-            'line-color': 'grey',
-            'line-opacity': 0.8
-          }
-        });
-      })
-    })
+    // map.on('load', () => {
+    //   obj.province_data.forEach((item: any) => {
+    //     let data = item
+    //     map.addLayer({
+    //       id: item.name,
+    //       type: 'line',
+    //       source: {
+    //         type: 'geojson',
+    //         data: data
+    //       },
+    //       layout: {
+    //       },
+    //       paint: {
+    //         'line-color': 'grey',
+    //         'line-opacity': 0.8
+    //       }
+    //     });
+    //   })
+    // })
 
     //mapbox cluster
     map.on('load', () => {
@@ -249,13 +252,13 @@ function Map() {
         const block_value = data.reduce((acc: any, cur: { total: any; }) => acc + cur.total, 0)
         const svg_box = document.createElement('div');
         svg_box.className = 'marker';
-        svg_box.style.width = '40px';
-        svg_box.style.height = '40px';
+        svg_box.style.width = '50px';
+        svg_box.style.height = '50px';
         const width = 40
         const height = 40
 
         const innerRadius = 0
-        const outerRadius = 20
+        const outerRadius = 5
 
         const pieData = d3.pie()
           .value((d: { total: any; }) => d.total)
@@ -263,11 +266,11 @@ function Map() {
 
         const arc = d3.arc()
           .innerRadius(innerRadius)
-          .outerRadius((d: { data: { total: number; }; }) => {
-            const percent = d.data.total / block_value
-            return percent * 5 + 5
+          .outerRadius((d: { data: { state: string; }; }) => {
+            const state = ['专科', '普通高校', '双一流', '211', '985']
+            const index = state.indexOf(d.data.state)
+            return outerRadius + index * 3
           })
-          .cornerRadius(2)
 
         const color = d3.scaleOrdinal()
           .domain(data.map((d: { state: any; }) => d.state))
@@ -288,6 +291,11 @@ function Map() {
         arcGroup.join("path")
           .attr("fill", (d: any, i: any) => color(i))
           .attr("d", arc)
+          // 显示每个path的title
+          .append('title')
+          .text((d: { data: { state: any; total: any; }; }) => {
+            return `${d.data.state}:${d.data.total}`
+          })
 
         // 向地图添加自定义图形
         new mapboxgl.Marker(svg_box)
@@ -305,6 +313,27 @@ function Map() {
       })
     })
 
+    map.on('load', () => {
+      // 向地图的左上方添加图例，用于表示每个颜色代表的含义，color是颜色数组，text为对应颜色的高校等级
+      const legend = document.createElement('div');
+      legend.className = 'legend';
+      legend.style.width = '70px';
+      legend.style.height = '100px';
+
+      const legendColor = ['#FF0000', '#FF7F00', '#FFFF00', '#00FF00', '#0000FF']
+      const legendText = ['985', '211', '双一流', '普通本科', '专科']
+      legendColor.forEach((item, index) => {
+        const div = document.createElement('div');
+        div.style.width = '70px';
+        div.style.height = '20px';
+        div.innerHTML = '<span style="background:' + item + ' ; display:inline-block ; height:10px ; width:20px" ></span>' + legendText[index];
+        legend.appendChild(div);
+      })
+      new mapboxgl.Marker(legend)
+        .setLngLat([80, 24])
+        .addTo(map);
+    })
+
   }))
 
 }
@@ -319,9 +348,7 @@ onMounted(() => {
 #map {
   width: 100%;
   height: 100%;
-  position: absolute;
   top: 0;
   bottom: 0;
-
 }
 </style>

@@ -1,4 +1,4 @@
-<template>
+<!-- <template>
     <div id='stream'>
 
     </div>
@@ -18,7 +18,7 @@ function streamGragh() {
         d3.selectAll('#stream svg').remove()
         const keys = ['GDP(亿元)', 'cost(元)', 'employment(万人)', 'income(元)', 'population(万人)']
         const dom = document.getElementById('stream')
-        const margin = { top: 30, right: 30, bottom: 30, left: 50 }
+        const margin = { top: 23, right: 10, bottom: 18, left: 45 }
         const width = dom.clientWidth - margin.left - margin.right
         const height = dom.clientHeight - margin.top - margin.bottom
 
@@ -43,7 +43,7 @@ function streamGragh() {
             .attr("transform", `translate(${margin.left}, ${margin.top})`)
 
         svg.append('g')
-            .call(d3.axisBottom(x).ticks(10))
+            .call(d3.axisBottom(x).ticks(5))
             .attr("transform", `translate(0, ${height})`)
 
         svg.append('g')
@@ -111,4 +111,4 @@ onMounted(() => {
     width: 100%;
     height: 100%;
 }
-</style>
+</style> -->

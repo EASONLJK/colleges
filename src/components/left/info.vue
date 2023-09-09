@@ -1,9 +1,10 @@
-<template>
+<!-- <template>
   <span style="background-color: red;"></span>冲
   <span style="background-color: yellow;"></span>稳
   <span style="background-color: green;"></span>保
   <el-scrollbar height="100px">
-    <p v-for="item in obj.data" :key="item" class="scrollbar-demo-item" @click="collegesInfo" >{{ item.name }}<span id="sp" :style="{backgroundColor:item.color}"></span></p>
+    <p v-for="item in obj.data" :key="item" class="scrollbar-demo-item" @click="collegesInfo">{{ item.name }}<span id="sp"
+        :style="{ backgroundColor: item.color }"></span></p>
   </el-scrollbar>
 </template>
 
@@ -18,24 +19,22 @@ let obj = reactive({
   attributes: [],
   color: []
 })
-bus.on("submitForm", bus_data => {
-  obj.data = bus_data
-  obj.collges_name = obj.data.map(item => item.name)
-  //:
 
-})
+function colleges_list() {
+  bus.on("submitForm", bus_data => {
+    obj.data = bus_data
+    obj.collges_name = obj.data.map(item => item.name)
+  })
+}
 
 function collegesInfo() {
   obj.filter_data = obj.data.filter(item => item.name == event.target.innerText)
   bus.emit("collgesInfo", obj.filter_data)
 }
-// onMounted(() => {
-//   try {
-//     collegesInfo()
-//   } catch (error) {
-//     console.log(error);
-//   }
-// })
+
+onMounted(() => {
+  colleges_list()
+})
 </script>
 
 <style scoped>
@@ -65,5 +64,4 @@ span {
   height: 15px;
   margin-right: 3px;
 }
-
-</style>
+</style> -->

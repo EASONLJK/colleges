@@ -8,11 +8,20 @@ export const useStore = defineStore('store',{
         school_parallel_filter: '',
         school_parallel_index: '',
         school_parallel_data: '',
+        colleges_filter: '',
+        process_weight_data: '',
+        parallel_data: '',
+        update_weight_data: '',
+        mark: '',
     }),
     getters:{
 
     },
     actions:{
+        // 实时更新修改权重的数据
+        weightUpdate(data){
+            this.colleges_filter = data
+        },
         //burshed方法,将数据传出
         brushend(){
             this.data = this.school_parallel_data
