@@ -18,7 +18,7 @@ yarn build
 ### Customize configuration
 See [Configuration Reference](https://cli.vuejs.org/config/).
 
-# algorithm
+# github到本地
 
 # 1、在GitHub上修改完后记得保存
 
@@ -28,7 +28,7 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 
 # 4、查看本地是否更新成功
 
-
+# 本地到github
 # 1、更改本地文件
 
 # 2、在本地文件夹下右键git bash here，
