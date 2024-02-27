@@ -4,7 +4,7 @@
             <button @click="openDialog">
                 Submit
             </button>
-            <childdialog :visible="dialogVisible" @ok="onDialogOk" @cancel="onDialogCancel"></childdialog>
+            <childdialog ref="childDialog" :visible="dialogVisible" @ok="onDialogOk" @cancel="onDialogCancel"></childdialog>
         </div>
         <div id="parallel_axis">
             <div id="school_parallel_axis">
@@ -14,16 +14,17 @@
 </template>
 
 <script setup>
-import { onMounted, reactive, onUpdated, toRaw, inject, ref } from 'vue';
+import { onMounted, reactive, watch, watchEffect, nextTick, inject, ref, toRef } from 'vue';
 import * as d3 from 'd3'
 import axios, { all } from 'axios'
 import { useStore } from '../../store/index.js'
 import childdialog from '../dialog/custom_weight.vue'
 
-let store = useStore
+let data_length = ref(0)
+let store = useStore()
 let bus = inject('bus')
 let allColleges = []
-let colleges_filter = []
+let url = 'http://127.0.0.1:5000/'
 
 let obj = reactive({
     area_name: [],
@@ -45,7 +46,7 @@ let obj = reactive({
 })
 
 const dialogVisible = ref(false);
-
+const childDialog = ref(null);
 
 function openDialog() {
     dialogVisible.value = true;
@@ -107,7 +108,6 @@ function AHP(AHP_data) {
     let CR = CI / RI_arr[AHP_data.length - 1];
 
     // console.log("CR = " + CR);
-    console.log("权重向量 = " + [weightVector]);
     // 将权重向量转换为数组类型，返回
     let weightVector_arr = [];
     for (let i = 0; i < AHP_data.length; i++) {
@@ -120,7 +120,7 @@ function AHP(AHP_data) {
 function onDialogOk(areaName, eduFund, natureName, schoolLevel, typeName, heatName, probName) {
     dialogVisible.value = false;
 
-    obj.area_name = Object.values(areaName)
+    obj.area_name = areaName
     obj.eduFund = eduFund
     obj.nature_name = natureName
     obj.school_level = schoolLevel
@@ -138,9 +138,7 @@ function onDialogOk(areaName, eduFund, natureName, schoolLevel, typeName, heatNa
 
     obj.all_weight = obj.nature_weight.concat(obj.school_weight, obj.type_weight, obj.area_weight, obj.edu_weight, obj.heat_weight, obj.prob_weight)
 
-    // 赋予权重属性的对象
     const process_weight_data = weightsProcess()
-    // 将process_weight_data存入store中，以便全局调用
     store.process_weight_data = process_weight_data
 }
 
@@ -211,7 +209,6 @@ function weightsProcess() {
     }
 
     process_weight = nature_weight.concat(area_weight, edu_weight, heat_weight, school_weight, type_weight, prob_weight)
-    // console.log(process_weight);
     return process_weight
 }
 
@@ -220,7 +217,6 @@ function onDialogCancel() {
 }
 
 function school_parallelAxis() {
-    let url = 'http://127.0.0.1:5000/'
     let data, keys
     let bus_data_name
     d3.select("#school_parallel_axis").select("svg").remove();
@@ -229,23 +225,18 @@ function school_parallelAxis() {
         data = store.school_parallel
         d3.select("#school_parallel_axis").select("svg").remove();
         bus.on('submitForm', bus_data => {
-            let length
-            //获取传入数据的总长度
-            length = bus_data.length
+            data_length = bus_data.length
             bus_data_name = bus_data.map(item => item.name)
-            //获取2021年的分数
             let score = bus_data.map(item => item.attributes.map(d => d.score))
             score = score.map(item => item[0])
-            console.log(score);
-            //对比bus_data_name,过滤出于bus_data_name相同的数据
-            data = data.filter(item => bus_data_name.includes(item.name))
-            //对比bus_data_name,排序出于bus_data_name相同的数据
-            data.sort((a, b) => {
-                return bus_data_name.indexOf(a.name) - bus_data_name.indexOf(b.name)
+            data = data.filter(item => {
+                return bus_data_name.some(d => {
+                    return d == item.name
+                })
             })
-            const probability = bus_data.map(item => item.probability)
-            const probability_name = bus_data.map(item => item.name)
-            // 将probability中prob_name字段添加到对应name的data中去
+
+            var probability = bus_data.map(item => item.probability)
+            var probability_name = bus_data.map(item => item.name)
             for (let i = 0; i < data.length; i++) {
                 for (let j = 0; j < probability.length; j++) {
                     if (data[i].name == probability_name[j]) {
@@ -253,7 +244,6 @@ function school_parallelAxis() {
                     }
                 }
             }
-            // 将score添加到data中去，对用score属性
             for (let i = 0; i < data.length; i++) {
                 for (let j = 0; j < score.length; j++) {
                     if (data[i].name == probability_name[j]) {
@@ -261,10 +251,8 @@ function school_parallelAxis() {
                     }
                 }
             }
-            console.log(data);
-            //获取data中除了name的字段
-            keys = Object.keys(data[0]).filter(item => item != 'name')
 
+            keys = Object.keys(data[0]).filter(item => item != 'name')
             d3.select("#school_parallel_axis").select("svg").remove();
             let school_parallel_view = document.getElementById("school_parallel_axis");
             let margin = { top: 10, right: 12, bottom: 10, left: 12 },
@@ -283,7 +271,6 @@ function school_parallelAxis() {
                 .y(([key, value]) => x.get(key)(value))
                 .x(([key]) => y(key))
 
-            //为每个轴绘制path
             const path = svg.append("g")
                 .attr("class", "line")
                 .attr("fill", "none")
@@ -298,7 +285,6 @@ function school_parallelAxis() {
                 .attr("stroke-linejoin", "round")
                 .attr("transform", `translate(0,${margin.top})`)
 
-            //绘制坐标轴
             svg.append("g")
                 .selectAll("g")
                 .data(keys)
@@ -379,7 +365,6 @@ function school_parallelAxis() {
                     .attr("stroke-linejoin", "round")
                     .attr("stroke", "white"));
 
-            //为每一个axisRight添加brush刷子，selection为当前选中的区域
             svg.append("g")
                 .selectAll("g")
                 .data(keys)
@@ -404,7 +389,6 @@ function school_parallelAxis() {
                     })
                 );
 
-            // 为过滤的数据更新权重
             function update_weight(weight_data) {
                 var process_weight = store.process_weight_data
                 // 踩坑，在JS中，对象是通过引用传递的，而不是通过值传递的
@@ -464,19 +448,17 @@ function school_parallelAxis() {
                 }
                 return school_parallel_data
             }
+            store.update_weight_data = update_weight(data)
+            // console.save = function (data, filename) {
+            //     var blob = new Blob([data], { type: "text/plain" });
+            //     var url = URL.createObjectURL(blob);
+            //     var link = document.createElement("a");
+            //     link.href = url;
+            //     link.download = filename;
+            //     link.click();
+            //     URL.revokeObjectURL(url);
+            // }
 
-            // 定义 console.save() 函数，将传入的内容保存为文件
-            console.save = function (data, filename) {
-                var blob = new Blob([data], { type: "text/plain" });
-                var url = URL.createObjectURL(blob);
-                var link = document.createElement("a");
-                link.href = url;
-                link.download = filename;
-                link.click();
-                URL.revokeObjectURL(url);
-            }
-
-            //刷子的brushend函数,统计轴上的刷子选中的区域的点的个数
             function brushend({ selection }) {
                 store.mark = 1
 
@@ -503,7 +485,7 @@ function school_parallelAxis() {
                     })
 
                     //获取刷子选中的区域所属的轴的id
-                    store.school_parallel_id = this.parentNode.__data__
+                    store.school_parallel_id = this.parentNode.__data__                                                                            
 
                     //将每个轴对应的筛选的数据存入allColleges中
                     allColleges[this.parentNode.__data__] = filtered
@@ -512,7 +494,7 @@ function school_parallelAxis() {
                     store.school_parallel_filter = filtered.length
 
                     //获取allColleges中相同的点
-                    colleges_filter = Object.values(allColleges).reduce((a, b) => {
+                    store.colleges_filter = Object.values(allColleges).reduce((a, b) => {
                         return a.filter(c => {
                             return b.some(d => {
                                 return d.name == c.name
@@ -522,26 +504,27 @@ function school_parallelAxis() {
 
                     //根据多次筛选的共同点的坐标，将其path的颜色改为红色
                     path.attr("stroke", d => {
-                        if (colleges_filter.some(item => item.name == d.name)) {
+                        if (store.colleges_filter.some(item => item.name == d.name)) {
                             return "red"
                         } else {
                             return "steelblue"
                         }
                     })
-                    // console.log(store.process_weight_data);
-                    console.log('筛选出来的数据', colleges_filter);
-                    //将筛选出来的数据更新权重
-                    store.update_weight_data = update_weight(colleges_filter)
 
-                    // console.save(JSON.stringify(store.update_weight_data), "update_weight_data.json");
-                    console.save(JSON.stringify(colleges_filter), "colleges_filter.json")
+                    store.colleges_filter = store.colleges_filter.map(proxyObject => {
+                        // 提取原始对象
+                        const plainObject = Object.fromEntries(Object.entries(proxyObject));
+                        return plainObject;
+                    });
+                    
+                    console.log('筛选出来的数据', store.colleges_filter);
 
                     store.parallel_data = [
                         store.school_parallel_id,
                         store.school_parallel_index,
                         store.school_parallel_filter,
-                        store.update_weight_data,
-                        length,
+                        store.colleges_filter,
+                        data_length,
                         store.mark
                     ]
                     console.log('选中', store.parallel_data);
@@ -550,24 +533,20 @@ function school_parallelAxis() {
                 if (!selection) {
                     path.attr("stroke", "steelblue")
                     store.mark = 0
-                    // 将未选中的数据从allColleges中删除
                     delete allColleges[this.parentNode.__data__]
-                    //获取allColleges中相同的点
-                    colleges_filter = Object.values(allColleges).reduce((a, b) => {
+                    store.colleges_filter = allColleges.reduce((a, b) => {
                         return a.filter(c => {
                             return b.some(d => {
                                 return d.name == c.name
                             })
                         })
                     })
-
-                    //将筛选出来的数据更新权重
                     store.parallel_data = [
                         store.school_parallel_id,
                         store.school_parallel_index,
                         store.school_parallel_filter,
-                        store.update_weight_data,
-                        length,
+                        store.colleges_filter,
+                        data_length,
                         store.mark
                     ]
                     console.log('未选中', store.parallel_data);
@@ -579,17 +558,45 @@ function school_parallelAxis() {
 
 }
 
+// watch(() => updateWeightData.value, (newValue) => {
+//     console.log('前端数据变化', updateWeightData.value, typeof updateWeightData.value);
+//     fetch(url + '/send_data_to_server', {
+//         method: 'POST',
+//         headers: {
+//             'Content-Type': 'application/json; charset=utf-8', // 设置字符编码为 UTF-8
+//         },
+//         body: JSON.stringify({ data: newValue }),
+//     })
+//         .then(response => response.json())
+//         .then(data => {
+//             // 处理从后端返回的响应
+//             console.log('后端数据变化：', typeof (data), data);
+//             store.ranSVM_data = data;
+
+//             // 在这里触发bus.emit
+//             store.parallel_data = [
+//                 store.school_parallel_id,
+//                 store.school_parallel_index,
+//                 store.school_parallel_filter,
+//                 store.ranSVM_data,
+//                 data_length,
+//                 store.mark
+//             ];
+//             bus.emit('brushend', store.parallel_data);
+//         })
+// }, { deep: true });
+
 onMounted(() => {
-    openDialog()
-    onDialogCancel()
+    // triggerChildMethod();
+    openDialog();
+    // onDialogOk();
+    onDialogCancel();
     // weightsProcess()
     try {
         school_parallelAxis()
     } catch (error) {
-        console.log(error);
     }
 })
-
 
 </script>
 

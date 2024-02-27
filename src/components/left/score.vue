@@ -151,7 +151,7 @@ const submitForm = async (formEl: FormInstance | undefined) => {
                 probability.push({
                     //name为学校名称，value为概率，四个等级，冲63、保62、稳61、不招生64
                     name: province_scores[i].name,
-                    value: 63
+                    prob_name: 63
                 })
                 // color_mark.push('red')
             

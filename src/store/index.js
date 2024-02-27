@@ -12,6 +12,8 @@ export const useStore = defineStore('store',{
         process_weight_data: '',
         parallel_data: '',
         update_weight_data: '',
+        ranSVM_data:'',
+        colleges_filter:'',
         mark: '',
     }),
     getters:{

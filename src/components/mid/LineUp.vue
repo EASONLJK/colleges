@@ -4,47 +4,57 @@
 
 <script setup>
 import * as LineUpJS from 'lineupjs';
-import { onMounted, ref, inject } from 'vue';
+import { onMounted, ref, inject, watch, nextTick } from 'vue';
+import { useStore } from '../../store/index.js'
 
 let bus = inject('bus')
+let store = useStore()
 let data = []
 let axis_name = []
 const lineupContainer = ref(null);
 let lineup = null;
+let update_weight_data = ref(null)
+
+watch(() => store.ranSVM_data, (newVal, oldVal) => {
+  update_weight_data.value = newVal;
+  nextTick(() => {
+    lineUp();
+  });
+})
 
 function lineUp() {
-  bus.on("brushend", parallel_data => {
-    console.log(parallel_data);
-    axis_name.includes(parallel_data[0]) ? '' : axis_name.push(parallel_data[0]);
-    // 如果axis_name中有view_total_number,把该字段修改为heat_name
-    if (axis_name.includes('view_total_number')) {
-      axis_name.splice(axis_name.indexOf('view_total_number'), 1, 'heat_name')
-    }
-    const div = document.getElementById('lineup');
-    div.innerHTML = '';
-    if (parallel_data[3].length > 0) {
-      data = parallel_data[3].map(item => {
+    try {
+      console.log(update_weight_data.value);
+      const div = document.getElementById('lineup');
+      div.innerHTML = '';
+      if (update_weight_data.value.length > 0) {
+        data = update_weight_data.value.map(item => {
+          let obj = {
+            Probability: item.probability,
+            School_name: item.name,
+            School_type: item.type_name,
+            School_level: item.school_level,
+            Nature_of_Education: item.nature_name,
+            Educational_fund: item.eduFund,
+            Pro_name: item.pro_name,
+            Heat_name: item.heat_name,
+            Area_name: item.area_name,
+          }
+          // for (let i = 0; i < axis_name.length; i++) {
+          //   obj[axis_name[i]] = item[axis_name[i]]
+          // }
+          return obj
+        })
 
-        let obj = {
-          probability: item.probability,
-          school_name: item.name
-        }
-        for (let i = 0; i < axis_name.length; i++) {
-          obj[axis_name[i]] = item[axis_name[i]]
-        }
-        return obj
-      })
-      
-      lineup = LineUpJS.asLineUp(lineupContainer.value, data);
-    } else {
-      lineup = LineUpJS.asLineUp(lineupContainer.value, []);
+        lineup = LineUpJS.asLineUp(lineupContainer.value, data);
+      } else {
+        lineup = LineUpJS.asLineUp(lineupContainer.value, []);
+      }
+    } catch (error) {
+      console.error('An error occurred:', error);
     }
-  });
 }
 
-onMounted(() => {
-  lineUp();
-});
 </script>
 
 <style scoped>
@@ -53,6 +63,5 @@ onMounted(() => {
 #lineup {
   width: 100%;
   height: 100%;
-
 }
 </style>

@@ -191,25 +191,7 @@ export default {
             natureName: '',
             schoolLevel: '',
             typeName: '',
-            weights: {},
-            areaNames: ['东北', '华北', '西北', '华中', '华东', '西南', '华南'],
-            endFunds: ['高经费', '中高经费', '中等经费', '中低经费', '低经费'],
-            natureNames: ['公办', '民办', '中外合办', '内港澳合办'],
-            schoolLevels: ['985', '211', '双一流', '普通本科', '专科'],
-            typeNames: ['综合', '理工', '师范', '农林', '政法', '艺术', '财经', '民族', '医药', '其他', '军事', '体育', '语言'],
-            heatNames: ['大热门', '热门', '中等热门', '偏冷门', '冷门'],
-            probNames: ['冲', '稳', '保', '不录取'],
-            dragging: false,
-            // 对话框的位置，位于屏幕中心
-            left: window.innerWidth - 300,
-            top: (window.innerHeight - 300) / 2,
-        };
-    },
-    watch: {
-        visible(value) {
-            if (value) {
-                this.weights = {
-                    '华北东北': 3,
+            weights: { '华北东北': 3,
                     '西北东北': 5,
                     '西北华北': 3,
                     '华中东北': 7,
@@ -349,16 +331,22 @@ export default {
                     '不录取冲': 1/7,
                     '保稳': 1/3,
                     '不录取稳': 1/5,
-                    '不录取保': 1/3,
-                }
-            } else {
-                this.weights = {};
-            }
-        },
+                    '不录取保': 1/3,},
+            areaNames: ['东北', '华北', '西北', '华中', '华东', '西南', '华南'],
+            endFunds: ['高经费', '中高经费', '中等经费', '中低经费', '低经费'],
+            natureNames: ['公办', '民办', '中外合办', '内港澳合办'],
+            schoolLevels: ['985', '211', '双一流', '普通本科', '专科'],
+            typeNames: ['综合', '理工', '师范', '农林', '政法', '艺术', '财经', '民族', '医药', '其他', '军事', '体育', '语言'],
+            heatNames: ['大热门', '热门', '中等热门', '偏冷门', '冷门'],
+            probNames: ['冲', '稳', '保', '不录取'],
+            dragging: false,
+            // 对话框的位置，位于屏幕中心
+            left: window.innerWidth - 300,
+            top: (window.innerHeight - 300) / 2,
+        };
     },
     methods: {
         onOk() {
-            // 将数据传递给父组件
             const areaNameWeights = [];
             const endFundWeights = [];
             const natureNameWeights = [];
@@ -470,28 +458,30 @@ export default {
             this.$emit('cancel');
         },
         closeDialog() {
-            // 点击立马关闭对话框
             this.$emit('cancel');
         },
         onMouseDown(event) {
-            // 鼠标按下时记录位置差值
             this.dragging = true
             this.diffX = event.clientX - this.left
             this.diffY = event.clientY - this.top
         },
         onMouseMove(event) {
-            // 鼠标移动时更新窗口位置
             if (this.dragging) {
                 this.left = event.clientX - this.diffX
                 this.top = event.clientY - this.diffY
             }
         },
         onMouseUp() {
-            // 鼠标松开时停止拖拽
             this.dragging = false
         }
     },
+    mounted() {
+        this.$nextTick(() => {
+            this.onOk();
+        });
+    }
 };
+
 </script>
 
 <style>

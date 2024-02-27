@@ -1,7 +1,5 @@
 <template>
-
-    <div id="map"></div>
-
+  <div id="map"></div>
 </template>
 
 <script setup lang="ts">
@@ -26,20 +24,14 @@ function Map() {
   })
 
   let url = "http://127.0.0.1:5000/mapbox/"
-  //get多个请求，获取多个数据
   axios.all([axios.get(url + "china"), axios.get(url + "point"), axios.get(url + "china_province"), axios.get(url + 'province_city'), axios.get(url + 'province_china'), axios.get(url + 'province_datas')]).then(axios.spread((china, point, china_province, province_city, province_china, province_data) => {
     data = china.data
-    // universities = colleges.data
     point_data = point.data
     obj.province = china_province.data
     obj.province_data = province_city.data
     obj.province_geo = province_china.data
     province_datas = province_data.data
 
-    //34个较淡的颜色，适应白色背景
-    // const colors = ['#FFC0CB', '#FFB6C1', '#FF69B4', '#FF1493', '#DB7093', '#C71585', '#FFA07A', '#FA8072', '#E9967A', '#F08080', '#CD5C5C', '#DC143C', '#FF0000', '#B22222', '#8B0000', '#FFA500', '#FF8C00', '#FF7F50', '#FF6347', '#FF4500', '#FFD700', '#FFFF00', '#FFFFE0', '#FFFACD', '#FAFAD2', '#FFEFD5', '#FFE4B5', '#FFDAB9', '#EEE8AA', '#F0E68C', '#BDB76B', '#ADFF2F', '#7FFF00', '#7CFC00']
-
-    //obj.province_geo的features中的propert
     obj.province_geo.features.forEach((item: { properties: { color: any; }; }, index: number) => {
       // item.properties.color = colors[index]
     })
@@ -65,13 +57,11 @@ function Map() {
         },
         layout: {},
         paint: {
-          //颜色设置为浅灰色
           'fill-color': '#B0C4DE',
           'fill-opacity': 0.8
         }
       });
     })
-    // 绘制每个省份，点击每个省份，触发事件
     map.on('load', () => {
       map.addLayer({
         id: 'province',
@@ -246,8 +236,6 @@ function Map() {
             }
           }).sort((a: { total: number; }, b: { total: number; }) => b.total - a.total)
         })
-        // console.log(data1[0]);
-
 
         const block_value = data.reduce((acc: any, cur: { total: any; }) => acc + cur.total, 0)
         const svg_box = document.createElement('div');
@@ -313,26 +301,42 @@ function Map() {
       })
     })
 
-    map.on('load', () => {
-      // 向地图的左上方添加图例，用于表示每个颜色代表的含义，color是颜色数组，text为对应颜色的高校等级
+    map.on('load', function () {
+      // 创建图例容器
       const legend = document.createElement('div');
       legend.className = 'legend';
-      legend.style.width = '70px';
-      legend.style.height = '100px';
+      legend.style.cssText = `
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    width: 140px;
+    background: rgba(255,255,255,0.8);
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+    z-index: 1;
+  `;
 
-      const legendColor = ['#FF0000', '#FF7F00', '#FFFF00', '#00FF00', '#0000FF']
-      const legendText = ['985', '211', '双一流', '普通本科', '专科']
-      legendColor.forEach((item, index) => {
-        const div = document.createElement('div');
-        div.style.width = '70px';
-        div.style.height = '20px';
-        div.innerHTML = '<span style="background:' + item + ' ; display:inline-block ; height:10px ; width:20px" ></span>' + legendText[index];
-        legend.appendChild(div);
-      })
-      new mapboxgl.Marker(legend)
-        .setLngLat([80, 24])
-        .addTo(map);
-    })
+      const legendColor = ['#FF0000', '#FF7F00', '#FFFF00', '#00FF00', '#0000FF'];
+      const legendText = ['985', '211', '双一流', '普通本科', '专科'];
+
+      // 循环创建图例项
+      legendColor.forEach((color, index) => {
+        const item = document.createElement('div');
+        item.style.cssText = `
+      display: flex;
+      align-items: center;
+      margin-bottom: 5px;
+    `;
+        item.innerHTML = `
+      <span style="background:${color}; width: 20px; height: 20px; display: inline-block;"></span>
+      <span style="margin-left: 5px;">${legendText[index]}</span>
+    `;
+        legend.appendChild(item);
+      });
+      // 添加图例至地图容器
+      map.getContainer().appendChild(legend);
+    });
 
   }))
 

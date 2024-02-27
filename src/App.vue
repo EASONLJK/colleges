@@ -34,7 +34,12 @@
     </div>
 
     <div class="footer-context">
-      <LineUp />
+      <div class="Info">
+        <info />
+      </div>
+      <div class="Lineup">
+        <LineUp />
+      </div>
     </div>
 
   </div>
@@ -43,9 +48,10 @@
 <script>
 import { useStore } from './store/index.js'
 import { storeToRefs } from 'pinia'
-import mapBox from './components/mid/mapBox.vue'
 import score from './components/left/score.vue'
+import mapBox from './components/mid/mapBox.vue'
 import LineUp from './components/mid/LineUp.vue'
+import info from './components/mid/info.vue'
 import sankey from './components/right/sankey.vue'
 import school_parallel_axis from './components/right/school_parallel_axis.vue'
 import professsion from './components/left/professsions.vue'
@@ -59,7 +65,8 @@ export default {
     LineUp,
     sankey,
     school_parallel_axis,
-    professsion
+    professsion,
+    info
   }
 }
 
@@ -164,6 +171,18 @@ export default {
   border-radius: 5px;
   border: 1px solid steelblue;
   background-color: #f5f5f5;
+  display: flex;
+  flex-direction: row;
+}
+
+.framWork>.footer-context>.Info {
+  width: 25%;
+  height: 100%;
+}
+
+.framWork>.footer-context>.Lineup {
+  width: 75%;
+  height: 100%;
 }
 
 .framWork>.footer {
@@ -177,5 +196,4 @@ export default {
 * {
   margin: 0;
   padding: 0;
-}
-</style>
+}</style>

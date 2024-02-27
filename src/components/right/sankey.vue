@@ -20,8 +20,8 @@ let allValue = []
 function sankey() {
     bus.on("brushend", parallel_data => {
         d3.select("#sankey").select("svg").remove();
+
         // d3绘制桑基图
-        console.log(parallel_data);
         let source = parallel_data[0]
         let target = parallel_data[1].map(item => {
             //将数字转换为对应文字
@@ -79,7 +79,7 @@ function sankey() {
             allSource.push(source)
             allTarget.push(target)
             allValue.push(value)
-        } 
+        }
         if (mark == 0) {
             //删除对应mark为0的数据
             for (let i = 0; i < allSource.length; i++) {
@@ -90,245 +90,270 @@ function sankey() {
                 }
             }
         }
-        // console.log('allsource',allSource);
-        // console.log('alltarget',allTarget);
-        // console.log('allvalue',allValue)
-        if (allSource.length > 1) {
-            for (let i = 0; i < allSource.length - 1; i++) {
-                if (allSource[i] == allSource[allSource.length - 1]) {
-                    allTarget[i] = allTarget[allSource.length - 1]
-                    allValue[i] = allValue[allSource.length - 1]
-                    allSource.pop()
-                    allTarget.pop()
-                    allValue.pop()
+        // if (allSource.length > 1) {
+        //     for (let i = 0; i < allSource.length - 1; i++) {
+        //         if (allSource[i] == allSource[allSource.length - 1]) {
+        //             allTarget[i] = allTarget[allSource.length - 1]
+        //             allValue[i] = allValue[allSource.length - 1]
+        //             allSource.pop()
+        //             allTarget.pop()
+        //             allValue.pop()
+        //         }
+        //     }
+        // }
+        // if (allSource.length == 1) {
+        //     data = {
+        //         "name": allSource[0],
+        //         "children": [
+        //             {
+        //                 "name": allTarget[0],
+        //                 "value": allValue[0]
+        //             },
+        //             {
+        //                 "name": unselected,
+        //                 "value": length - allValue[0]
+        //             }
+        //         ]
+        //     }
+        // }
+        // if (allSource.length == 2) {
+        //     data = {
+        //         "name": allSource[0],
+        //         "children": [
+        //             {
+        //                 "name": allTarget[0],
+        //                 "children": [
+        //                     {
+        //                         "name": allTarget[1],
+        //                         "value": allValue[0]
+        //                     },
+        //                     {
+        //                         "name": unselected,
+        //                         "value": length - allValue[1]
+        //                     }
+        //                 ]
+        //             },
+        //             {
+        //                 "name": unselected,
+        //                 "value": length - allValue[1]
+        //             }
+        //         ]
+        //     }
+        // }
+        // if (allSource.length == 3) {
+        //     data = {
+        //         "name": allSource[0],
+        //         "children": [
+        //             {
+        //                 "name": allTarget[0],
+        //                 "children": [
+        //                     {
+        //                         "name": allTarget[1],
+        //                         "children": [
+        //                             {
+        //                                 "name": allTarget[2],
+        //                                 "value": allValue[0]
+        //                             },
+        //                             {
+        //                                 "name": unselected,
+        //                                 "value": length - allValue[2]
+        //                             }
+        //                         ]
+        //                     },
+        //                     {
+        //                         "name": unselected,
+        //                         "value": length - allValue[1]
+        //                     }
+        //                 ]
+        //             },
+        //             {
+        //                 "name": unselected,
+        //                 "value": length - allValue[0]
+        //             }
+        //         ]
+        //     }
+        // }
+        // if (allSource.length == 4) {
+        //     data = {
+        //         "name": allSource[0],
+        //         "children": [
+        //             {
+        //                 "name": allTarget[0],
+        //                 "children": [
+        //                     {
+        //                         "name": allTarget[1],
+        //                         "children": [
+        //                             {
+        //                                 "name": allTarget[2],
+        //                                 "children": [
+        //                                     {
+        //                                         "name": allTarget[3],
+        //                                         "value": allValue[0]
+        //                                     },
+        //                                     {
+        //                                         "name": unselected,
+        //                                         "value": length - allValue[3]
+        //                                     }
+        //                                 ]
+        //                             },
+        //                             {
+        //                                 "name": unselected,
+        //                                 "value": length - allValue[2]
+        //                             }
+        //                         ]
+        //                     },
+        //                     {
+        //                         "name": unselected,
+        //                         "value": length - allValue[1]
+        //                     }
+        //                 ]
+        //             },
+        //             {
+        //                 "name": unselected,
+        //                 "value": length - allValue[0]
+        //             }
+        //         ]
+        //     }
+        // }
+        // if (allSource.length == 5) {
+        //     data = {
+        //         "name": allSource[0],
+        //         "children": [
+        //             {
+        //                 "name": allTarget[0],
+        //                 "children": [
+        //                     {
+        //                         "name": allTarget[1],
+        //                         "children": [
+        //                             {
+        //                                 "name": allTarget[2],
+        //                                 "children": [
+        //                                     {
+        //                                         "name": allTarget[3],
+        //                                         "children": [
+        //                                             {
+        //                                                 "name": allTarget[4],
+        //                                                 "value": allValue[0]
+        //                                             },
+        //                                             {
+        //                                                 "name": unselected,
+        //                                                 "value": length - allValue[4]
+        //                                             }
+        //                                         ]
+        //                                     },
+        //                                     {
+        //                                         "name": unselected,
+        //                                         "value": length - allValue[3]
+        //                                     }
+        //                                 ]
+        //                             },
+        //                             {
+        //                                 "name": unselected,
+        //                                 "value": length - allValue[2]
+        //                             }
+        //                         ]
+        //                     },
+        //                     {
+        //                         "name": unselected,
+        //                         "value": length - allValue[1]
+        //                     }
+        //                 ]
+        //             },
+        //             {
+        //                 "name": unselected,
+        //                 "value": length - allValue[0]
+        //             }
+        //         ]
+        //     }
+        // }
+        // if (allSource.length == 6) {
+        //     data = {
+        //         "name": allSource[0],
+        //         "children": [
+        //             {
+        //                 "name": allTarget[0],
+        //                 "children": [
+        //                     {
+        //                         "name": allTarget[1],
+        //                         "children": [
+        //                             {
+        //                                 "name": allTarget[2],
+        //                                 "children": [
+        //                                     {
+        //                                         "name": allTarget[3],
+        //                                         "children": [
+        //                                             {
+        //                                                 "name": allTarget[4],
+        //                                                 "children": [
+        //                                                     {
+        //                                                         "name": allTarget[5],
+        //                                                         "value": allValue[0]
+        //                                                     },
+        //                                                     {
+        //                                                         "name": unselected,
+        //                                                         "value": length - allValue[5]
+        //                                                     }
+        //                                                 ]
+        //                                             },
+        //                                             {
+        //                                                 "name": unselected,
+        //                                                 "value": length - allValue[4]
+        //                                             }
+        //                                         ]
+        //                                     },
+        //                                     {
+        //                                         "name": unselected,
+        //                                         "value": length - allValue[3]
+        //                                     }
+        //                                 ]
+        //                             },
+        //                             {
+        //                                 "name": unselected,
+        //                                 "value": length - allValue[2]
+        //                             }
+        //                         ]
+        //                     },
+        //                     {
+        //                         "name": unselected,
+        //                         "value": length - allValue[1]
+        //                     }
+        //                 ]
+        //             },
+        //             {
+        //                 "name": unselected,
+        //                 "value": length - allValue[0]
+        //             }
+        //         ]
+        //     }
+        // }
+        function buildChildren(source, target, value, length, depth) {
+            if (depth === source.length) {
+                return {
+                    "name": unselected,
+                    "value": length - value[depth - 1]
                 }
             }
-        }
-        if (allSource.length == 1) {
-            data = {
-                "name": allSource[0],
+
+            return {
+                "name": target[depth - 1],
                 "children": [
                     {
-                        "name": allTarget[0],
-                        "value": allValue[0]
+                        "name": target[depth],
+                        "value": source.length - 1 ? value[depth] : undefined,
+                        "child": buildChildren(source, target, value, length, depth + 1),
                     },
-                    {
-                        "name": unselected,
-                        "value": length - allValue[0]
-                    }
+                    buildChildren(source, target, value, length, depth + 1)
                 ]
             }
         }
-        if (allSource.length == 2) {
+
+        if (allSource.length) {
             data = {
                 "name": allSource[0],
-                "children": [
-                    {
-                        "name": allTarget[0],
-                        "children": [
-                            {
-                                "name": allTarget[1],
-                                "value": allValue[0]
-                            },
-                            {
-                                "name": unselected,
-                                "value": length - allValue[1]
-                            }
-                        ]
-                    },
-                    {
-                        "name": unselected,
-                        "value": length - allValue[1]
-                    }
-                ]
-            }
+                "children": buildChildren(allSource, allTarget, allValue, length, 1)
+            };
         }
-        if (allSource.length == 3) {
-            data = {
-                "name": allSource[0],
-                "children": [
-                    {
-                        "name": allTarget[0],
-                        "children": [
-                            {
-                                "name": allTarget[1],
-                                "children": [
-                                    {
-                                        "name": allTarget[2],
-                                        "value": allValue[0]
-                                    },
-                                    {
-                                        "name": unselected,
-                                        "value": length - allValue[2]
-                                    }
-                                ]
-                            },
-                            {
-                                "name": unselected,
-                                "value": length - allValue[1]
-                            }
-                        ]
-                    },
-                    {
-                        "name": unselected,
-                        "value": length - allValue[0]
-                    }
-                ]
-            }
-        }
-        if (allSource.length == 4) {
-            data = {
-                "name": allSource[0],
-                "children": [
-                    {
-                        "name": allTarget[0],
-                        "children": [
-                            {
-                                "name": allTarget[1],
-                                "children": [
-                                    {
-                                        "name": allTarget[2],
-                                        "children": [
-                                            {
-                                                "name": allTarget[3],
-                                                "value": allValue[0]
-                                            },
-                                            {
-                                                "name": unselected,
-                                                "value": length - allValue[3]
-                                            }
-                                        ]
-                                    },
-                                    {
-                                        "name": unselected,
-                                        "value": length - allValue[2]
-                                    }
-                                ]
-                            },
-                            {
-                                "name": unselected,
-                                "value": length - allValue[1]
-                            }
-                        ]
-                    },
-                    {
-                        "name": unselected,
-                        "value": length - allValue[0]
-                    }
-                ]
-            }
-        }
-        if (allSource.length == 5) {
-            data = {
-                "name": allSource[0],
-                "children": [
-                    {
-                        "name": allTarget[0],
-                        "children": [
-                            {
-                                "name": allTarget[1],
-                                "children": [
-                                    {
-                                        "name": allTarget[2],
-                                        "children": [
-                                            {
-                                                "name": allTarget[3],
-                                                "children": [
-                                                    {
-                                                        "name": allTarget[4],
-                                                        "value": allValue[0]
-                                                    },
-                                                    {
-                                                        "name": unselected,
-                                                        "value": length - allValue[4]
-                                                    }
-                                                ]
-                                            },
-                                            {
-                                                "name": unselected,
-                                                "value": length - allValue[3]
-                                            }
-                                        ]
-                                    },
-                                    {
-                                        "name": unselected,
-                                        "value": length - allValue[2]
-                                    }
-                                ]
-                            },
-                            {
-                                "name": unselected,
-                                "value": length - allValue[1]
-                            }
-                        ]
-                    },
-                    {
-                        "name": unselected,
-                        "value": length - allValue[0]
-                    }
-                ]
-            }
-        }
-        if (allSource.length == 6) {
-            data = {
-                "name": allSource[0],
-                "children": [
-                    {
-                        "name": allTarget[0],
-                        "children": [
-                            {
-                                "name": allTarget[1],
-                                "children": [
-                                    {
-                                        "name": allTarget[2],
-                                        "children": [
-                                            {
-                                                "name": allTarget[3],
-                                                "children": [
-                                                    {
-                                                        "name": allTarget[4],
-                                                        "children": [
-                                                            {
-                                                                "name": allTarget[5],
-                                                                "value": allValue[0]
-                                                            },
-                                                            {
-                                                                "name": unselected,
-                                                                "value": length - allValue[5]
-                                                            }
-                                                        ]
-                                                    },
-                                                    {
-                                                        "name": unselected,
-                                                        "value": length - allValue[4]
-                                                    }
-                                                ]
-                                            },
-                                            {
-                                                "name": unselected,
-                                                "value": length - allValue[3]
-                                            }
-                                        ]
-                                    },
-                                    {
-                                        "name": unselected,
-                                        "value": length - allValue[2]
-                                    }
-                                ]
-                            },
-                            {
-                                "name": unselected,
-                                "value": length - allValue[1]
-                            }
-                        ]
-                    },
-                    {
-                        "name": unselected,
-                        "value": length - allValue[0]
-                    }
-                ]
-            }
-        }
+
         const dom = document.getElementById('sankey')
         const margin = { top: 15, right: 10, bottom: 10, left: 10 }
         const width = dom.offsetWidth - margin.left - margin.right
@@ -359,9 +384,7 @@ function sankey() {
             .attr('class', 'link')
             .attr('fill', 'none')
             .attr('stroke', '#ccc')
-            //根据节点的value值设置连线的粗细
             .attr('stroke-width', d => {
-                //根据circle的半径设置连线的粗细
                 if (d.target.data.value > 1000) {
                     return d.target.data.value ? d.target.data.value / 1000 + 5 : 5
                 } else if (d.target.data.value > 100) {
@@ -372,25 +395,22 @@ function sankey() {
                     return d.target.data.value ? d.target.data.value / 10 + 5 : 5
                 }
             })
-            .attr('d', d3.linkVertical() // 修改连线的方向为垂直方向
+            .attr('d', d3.linkVertical()
                 .x(d => d.x)
                 .y(d => d.y))
 
-        // 创建节点
         const node = g.selectAll('.node')
             .data(treeData.descendants())
             .enter()
             .append('g')
             .attr('class', 'node')
-            .attr('transform', d => `translate(${d.x},${d.y})`) // 交换x和y
+            .attr('transform', d => `translate(${d.x},${d.y})`)
 
-        // 创建圆形节点
         node.append('circle')
             .attr('r', d => {
-                //限制节点value,防止节点过大
                 if (d.data.value > 1000) {
-                    return d.data.value ? d.data.value / 1000 + 5: 5
-                }else if (d.data.value > 100) {
+                    return d.data.value ? d.data.value / 1000 + 5 : 5
+                } else if (d.data.value > 100) {
                     return d.data.value ? d.data.value / 100 + 5 : 5
                 } else if (d.data.value > 50) {
                     return d.data.value ? d.data.value / 50 + 5 : 5
@@ -404,7 +424,6 @@ function sankey() {
             .attr('dy', '.35em')
             .attr('x', d => d.children ? 0 : 8)
             .attr('transform', d => {
-                //如果是子节点，则左边节点文字向左偏移，右边节点文字向右偏移
                 if (d.children) {
                     return d.children[0].x > d.children[1].x ? 'translate(-8,0)' : 'translate(8,0)'
                 } else {
@@ -443,6 +462,10 @@ onMounted(() => {
         console.log(error)
     }
 })
+
+onUnmounted(() => {
+    bus.off("brushend", handleBrushEnd);
+});
 
 </script>
 
