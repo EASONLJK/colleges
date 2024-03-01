@@ -309,7 +309,7 @@ function Map() {
     position: absolute;
     top: 20px;
     left: 20px;
-    width: 140px;
+    width: 80px;
     background: rgba(255,255,255,0.8);
     padding: 10px;
     border-radius: 5px;

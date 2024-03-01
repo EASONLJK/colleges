@@ -485,7 +485,7 @@ function school_parallelAxis() {
                     })
 
                     //获取刷子选中的区域所属的轴的id
-                    store.school_parallel_id = this.parentNode.__data__                                                                            
+                    store.school_parallel_id = this.parentNode.__data__
 
                     //将每个轴对应的筛选的数据存入allColleges中
                     allColleges[this.parentNode.__data__] = filtered
@@ -501,22 +501,12 @@ function school_parallelAxis() {
                             })
                         })
                     })
-
-                    //根据多次筛选的共同点的坐标，将其path的颜色改为红色
-                    path.attr("stroke", d => {
-                        if (store.colleges_filter.some(item => item.name == d.name)) {
-                            return "red"
-                        } else {
-                            return "steelblue"
-                        }
-                    })
-
                     store.colleges_filter = store.colleges_filter.map(proxyObject => {
                         // 提取原始对象
                         const plainObject = Object.fromEntries(Object.entries(proxyObject));
                         return plainObject;
                     });
-                    
+
                     console.log('筛选出来的数据', store.colleges_filter);
 
                     store.parallel_data = [
@@ -531,16 +521,14 @@ function school_parallelAxis() {
                     bus.emit('brushend', store.parallel_data)
                 }
                 if (!selection) {
-                    path.attr("stroke", "steelblue")
                     store.mark = 0
                     delete allColleges[this.parentNode.__data__]
-                    store.colleges_filter = allColleges.reduce((a, b) => {
-                        return a.filter(c => {
-                            return b.some(d => {
-                                return d.name == c.name
-                            })
-                        })
-                    })
+                    var remainingData = [].concat(...Object.values(allColleges));
+
+                    store.colleges_filter = data.filter(d => {
+                        return remainingData.some(item => item.name === d.name)
+                    });
+                    store.school_parallel_id = this.parentNode.__data__;
                     store.parallel_data = [
                         store.school_parallel_id,
                         store.school_parallel_index,
@@ -548,43 +536,25 @@ function school_parallelAxis() {
                         store.colleges_filter,
                         data_length,
                         store.mark
-                    ]
-                    console.log('未选中', store.parallel_data);
+                    ];
+                    console.log("返回取消选中的allColleges:", allColleges);
+                    console.log("返回取消选中的轴的信息", store.parallel_data);
+                    console.log('Canceled selection for:', this.parentNode.__data__, store.mark);  // 打印取消选中的信息
                     bus.emit('brushend', store.parallel_data)
-                };
+                }
+                // 根据多次筛选的共同点的坐标，将其path的颜色改为红色
+                path.attr("stroke", d => {
+                    if (store.colleges_filter.some(item => item.name == d.name)) {
+                        return "red"
+                    } else {
+                        return "steelblue"
+                    }
+                })
             }
         })
     })
 
 }
-
-// watch(() => updateWeightData.value, (newValue) => {
-//     console.log('前端数据变化', updateWeightData.value, typeof updateWeightData.value);
-//     fetch(url + '/send_data_to_server', {
-//         method: 'POST',
-//         headers: {
-//             'Content-Type': 'application/json; charset=utf-8', // 设置字符编码为 UTF-8
-//         },
-//         body: JSON.stringify({ data: newValue }),
-//     })
-//         .then(response => response.json())
-//         .then(data => {
-//             // 处理从后端返回的响应
-//             console.log('后端数据变化：', typeof (data), data);
-//             store.ranSVM_data = data;
-
-//             // 在这里触发bus.emit
-//             store.parallel_data = [
-//                 store.school_parallel_id,
-//                 store.school_parallel_index,
-//                 store.school_parallel_filter,
-//                 store.ranSVM_data,
-//                 data_length,
-//                 store.mark
-//             ];
-//             bus.emit('brushend', store.parallel_data);
-//         })
-// }, { deep: true });
 
 onMounted(() => {
     // triggerChildMethod();

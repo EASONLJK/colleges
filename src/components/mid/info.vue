@@ -69,28 +69,31 @@ watch(() => [store.update_weight_data, store.colleges_filter, obj.filter_data], 
   }
   obj.data = [...commonData]; // 使用了新数组副本
   obj.collges_name = commonData.map((item) => item.name);
-  console.log(obj.data);
-  fetch(url + '/send_data_to_server', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json; charset=utf-8',
-    },
-    body: JSON.stringify({ data: obj.data }),
-  })
-    .then(response => {
-      if (!response.ok) {
-        throw new Error('Network response was not ok ' + response.statusText);
-      }
-      return response.json();
+  if (obj.data.length > 0) {
+    fetch(url + '/send_data_to_server', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json; charset=utf-8',
+      },
+      body: JSON.stringify({ data: obj.data }),
     })
-    .then(data => {
-      console.log('后端数据变化：', typeof data, data);
-      store.ranSVM_data = data;
-      bus.emit('ranked', store.ranSVM_data);
-    })
-    .catch(error => {
-      console.error('There has been a problem with your fetch operation:', error);
-    });
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok ' + response.statusText);
+        }
+        return response.json();
+      })
+      .then(data => {
+        console.log('后端数据变化：', typeof data, data);
+        store.ranSVM_data = data;
+        bus.emit('ranked', store.ranSVM_data);
+      })
+      .catch(error => {
+        console.error('There has been a problem with your fetch operation:', error);
+      });
+  } else {
+    bus.emit('empty-data');
+  }
 })
 </script>
 
