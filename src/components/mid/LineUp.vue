@@ -20,11 +20,12 @@ watch(() => store.ranSVM_data, (newVal, oldVal) => {
   nextTick(() => {
     lineUp();
   });
+  console.log(update_weight_data);
 })
 
 function lineUp() {
     try {
-      console.log(update_weight_data.value);
+      // console.log(update_weight_data.value);
       const div = document.getElementById('lineup');
       div.innerHTML = '';
       if (update_weight_data.value.length > 0) {
@@ -36,7 +37,7 @@ function lineUp() {
             School_level: item.school_level,
             Nature_of_Education: item.nature_name,
             Educational_fund: item.eduFund,
-            Pro_name: item.pro_name,
+            Pro_name: item.prob_name,
             Heat_name: item.heat_name,
             Area_name: item.area_name,
           }

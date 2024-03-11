@@ -4,7 +4,8 @@
             <button @click="openDialog">
                 Submit
             </button>
-            <childdialog ref="childDialog" :visible="dialogVisible" @ok="onDialogOk" @cancel="onDialogCancel"></childdialog>
+            <childdialog ref="childDialog" :visible="dialogVisible" @ok="onDialogOk" @cancel="onDialogCancel">
+            </childdialog>
         </div>
         <div id="parallel_axis">
             <div id="school_parallel_axis">
@@ -458,14 +459,11 @@ function school_parallelAxis() {
             //     link.click();
             //     URL.revokeObjectURL(url);
             // }
-
             function brushend({ selection }) {
                 store.mark = 1
-
                 if (selection) {
                     //计算刷子选中的区域的domain
                     var domain = selection.map(x.get(this.parentNode.__data__).invert)
-
                     //获取刷子选中的区域的点
                     var filtered = data.filter(d => {
                         return d[this.parentNode.__data__] >= domain[0] && d[this.parentNode.__data__] <= domain[1]
@@ -473,7 +471,7 @@ function school_parallelAxis() {
 
                     //获取刷子选中的区域的点对应轴的刻度的text
                     var ticks = x.get(this.parentNode.__data__).ticks()
-
+                    store.all_school_parallel_index = ticks
                     //获取刷子选中的区域的点对应轴的刻度的值
                     var index = ticks.filter(d => {
                         return d >= domain[0] && d <= domain[1]
@@ -507,15 +505,15 @@ function school_parallelAxis() {
                         return plainObject;
                     });
 
-                    console.log('筛选出来的数据', store.colleges_filter);
-
+                    // console.log('筛选出来的数据', store.colleges_filter)
                     store.parallel_data = [
                         store.school_parallel_id,
                         store.school_parallel_index,
                         store.school_parallel_filter,
                         store.colleges_filter,
                         data_length,
-                        store.mark
+                        store.mark,
+                        store.all_school_parallel_index
                     ]
                     console.log('选中', store.parallel_data);
                     bus.emit('brushend', store.parallel_data)
@@ -535,21 +533,25 @@ function school_parallelAxis() {
                         store.school_parallel_filter,
                         store.colleges_filter,
                         data_length,
-                        store.mark
+                        store.mark,
+                        store.all_school_parallel_index
                     ];
-                    console.log("返回取消选中的allColleges:", allColleges);
-                    console.log("返回取消选中的轴的信息", store.parallel_data);
-                    console.log('Canceled selection for:', this.parentNode.__data__, store.mark);  // 打印取消选中的信息
                     bus.emit('brushend', store.parallel_data)
                 }
-                // 根据多次筛选的共同点的坐标，将其path的颜色改为红色
                 path.attr("stroke", d => {
-                    if (store.colleges_filter.some(item => item.name == d.name)) {
-                        return "red"
-                    } else {
-                        return "steelblue"
+                    // 首先检查store.colleges_filter是否为空
+                    if (store.colleges_filter.length === 0) {
+                        // 如果为空，则将路径颜色设置为"green"或其他期望的颜色
+                        return "steelblue"; // 你可以根据需求更换这里的颜色
                     }
-                })
+                    else if (store.colleges_filter.some(item => item.name == d.name)) {
+                        // 如果store.colleges_filter不为空，并且其中某项的name属性与d.name相等，设置颜色为"red"
+                        return "red";
+                    } else {
+                        // 如果以上两个条件都不满足，设置颜色为"steelblue"
+                        return "steelblue";
+                    }
+                });
             }
         })
     })
@@ -595,4 +597,4 @@ onMounted(() => {
     width: 100%;
     height: 10%;
 }
-</style>
+</style>../dialog/custom_weights.vue

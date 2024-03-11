@@ -113,7 +113,7 @@ watch(() => [store.update_weight_data, store.colleges_filter, obj.filter_data], 
   border-radius: 2px;
   /* 圆角半径，可以根据需要调整 */
   padding: 2px;
-  color: var(--el-color-primary);
+  color: black;
 }
 
 #sp {

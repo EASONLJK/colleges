@@ -176,12 +176,12 @@ export default {
 }
 
 .framWork>.footer-context>.Info {
-  width: 25%;
+  width: 20%;
   height: 100%;
 }
 
 .framWork>.footer-context>.Lineup {
-  width: 75%;
+  width: 80%;
   height: 100%;
 }
 

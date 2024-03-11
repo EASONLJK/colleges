@@ -1112,10 +1112,15 @@
   resolved "https://registry.yarnpkg.com/@mapbox/jsonlint-lines-primitives/-/jsonlint-lines-primitives-2.0.2.tgz#ce56e539f83552b58d10d672ea4d6fc9adc7b234"
   integrity sha512-rY0o9A5ECsTQRVhv7tL/OyDpGAoUB4tTvLiW1DSzQGq4bvTPhNw1VpSNjDJc5GFZ2XuyOtSWSVN05qOtcD71qQ==
 
-"@mapbox/mapbox-gl-supported@^2.0.1":
-  version "2.0.1"
-  resolved "https://registry.yarnpkg.com/@mapbox/mapbox-gl-supported/-/mapbox-gl-supported-2.0.1.tgz#c15367178d8bfe4765e6b47b542fe821ce259c7b"
-  integrity sha512-HP6XvfNIzfoMVfyGjBckjiAOQK9WfX0ywdLubuPMPv+Vqf5fj0uCbgBQYpiqcWZT6cbyyRnTSXDheT1ugvF6UQ==
+"@mapbox/mapbox-gl-language@^1.0.1":
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/@mapbox/mapbox-gl-language/-/mapbox-gl-language-1.0.1.tgz#19c57da3163959f70c4057967cf599d2f49a7795"
+  integrity sha512-gL58ojl7gaWLfbSISoB2QJEfTK3j+NKvPH9og0r+c3bd5BNqhY19Eb4OPfDc5+dGmjW03LhtZBc4n2b7Xn8kjA==
+
+"@mapbox/mapbox-gl-supported@^3.0.0":
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/@mapbox/mapbox-gl-supported/-/mapbox-gl-supported-3.0.0.tgz#bebd3d5da3c1fd988011bb79718a39f63f5e16ac"
+  integrity sha512-2XghOwu16ZwPJLOFVuIOaLbN0iKMn867evzXFyf0P22dqugezfJwLmdanAgU25ITvz1TvOfVP4jsDImlDJzcWg==
 
 "@mapbox/point-geometry@0.1.0", "@mapbox/point-geometry@^0.1.0", "@mapbox/point-geometry@~0.1.0":
   version "0.1.0"
@@ -2494,6 +2499,11 @@ character-parser@^2.2.0:
   integrity sha512-+UqJQjFEFaTAs3bNsF2j2kEN1baG/zghZbdqoYEDxGZtJo9LBzl1A+m0D4n3qKx8N2FNv8/Xp6yV9mQmBuptaw==
   dependencies:
     is-regex "^1.0.3"
+
+cheap-ruler@^3.0.1:
+  version "3.0.2"
+  resolved "https://registry.yarnpkg.com/cheap-ruler/-/cheap-ruler-3.0.2.tgz#60d2b3a0cb77a420472c8c5bb8f2c320fba4bb87"
+  integrity sha512-02T332h1/HTN6cDSufLP8x4JzDs2+VC+8qZ/N0kWIVPyc2xUkWwWh3B2fJxR7raXkL4Mq7k554mfuM9ofv/vGg==
 
 chokidar@^3.4.2, chokidar@^3.5.3:
   version "3.5.3"
@@ -4704,10 +4714,10 @@ jsonlint-lines@1.7.1:
     JSV ">= 4.0.x"
     nomnom ">= 1.5.x"
 
-kdbush@^3.0.0:
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/kdbush/-/kdbush-3.0.0.tgz#f8484794d47004cc2d85ed3a79353dbe0abc2bf0"
-  integrity sha512-hRkd6/XW4HTsA9vjVpY9tuXJYLSlelnkTmVFu4M9/7MIYQtFcHpbugAU7UbOfjOiVSVYl2fqgBuJ32JUmRo5Ew==
+kdbush@^4.0.1, kdbush@^4.0.2:
+  version "4.0.2"
+  resolved "https://registry.yarnpkg.com/kdbush/-/kdbush-4.0.2.tgz#2f7b7246328b4657dd122b6c7f025fbc2c868e39"
+  integrity sha512-WbCVYJ27Sz8zi9Q7Q0xHC+05iwkm3Znipc2XTlrnJbsHMYktW4hPhXUE8Ys1engBrvffoSCqbil1JQAa7clRpA==
 
 kind-of@^6.0.2:
   version "6.0.3"
@@ -4832,6 +4842,11 @@ lodash-unified@^1.0.2:
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/lodash-unified/-/lodash-unified-1.0.3.tgz#80b1eac10ed2eb02ed189f08614a29c27d07c894"
   integrity sha512-WK9qSozxXOD7ZJQlpSqOT+om2ZfcT4yO+03FuzAHD0wF6S0l0090LRPDx3vhTTLZ8cFKpBn+IOcVXK6qOcIlfQ==
+
+lodash.clonedeep@^4.5.0:
+  version "4.5.0"
+  resolved "https://registry.yarnpkg.com/lodash.clonedeep/-/lodash.clonedeep-4.5.0.tgz#e23f3f9c4f8fbdde872529c1071857a086e5ccef"
+  integrity sha512-H5ZhCF25riFd9uB5UCkVKo61m3S/xZk1x4wA6yp/L3RFP6Z/eHH1ymQcGLo7J3GMPfm0V/7m1tryHuGVxpqEBQ==
 
 lodash.debounce@^4.0.8:
   version "4.0.8"
@@ -4964,31 +4979,36 @@ mapbox-gl-draw@^0.16.0:
     point-geometry "0.0.0"
     xtend "^4.0.1"
 
-mapbox-gl@^2.13.0:
-  version "2.13.0"
-  resolved "https://registry.yarnpkg.com/mapbox-gl/-/mapbox-gl-2.13.0.tgz#a69b1ec4c26e075f17fa5db292757e5fe8af8310"
-  integrity sha512-G8pU1/I9HC7xNbhKPKFtRkdUDkWJBNbYPMeRjBig3lPaYtvHPIaFmXMR6BDyZ/gnwodElrwMZGdGsoH8kecX8w==
+mapbox-gl@^3.2.0:
+  version "3.2.0"
+  resolved "https://registry.yarnpkg.com/mapbox-gl/-/mapbox-gl-3.2.0.tgz#be57240b61c597b92cb305280208f8ab66c00df3"
+  integrity sha512-v8S7x+wTr35kJ9nqzgn/VPiSFZxBkyQhwCk9bdyiFHVwCukNGG3LXt03FoaHHTsOuB9JWenWE96k0Uw+HGMZ8w==
   dependencies:
     "@mapbox/geojson-rewind" "^0.5.2"
     "@mapbox/jsonlint-lines-primitives" "^2.0.2"
-    "@mapbox/mapbox-gl-supported" "^2.0.1"
+    "@mapbox/mapbox-gl-supported" "^3.0.0"
     "@mapbox/point-geometry" "^0.1.0"
     "@mapbox/tiny-sdf" "^2.0.6"
     "@mapbox/unitbezier" "^0.0.1"
     "@mapbox/vector-tile" "^1.3.1"
     "@mapbox/whoots-js" "^3.1.0"
+    cheap-ruler "^3.0.1"
     csscolorparser "~1.0.3"
     earcut "^2.2.4"
     geojson-vt "^3.2.1"
     gl-matrix "^3.4.3"
     grid-index "^1.1.0"
+    kdbush "^4.0.1"
+    lodash.clonedeep "^4.5.0"
     murmurhash-js "^1.0.0"
     pbf "^3.2.1"
     potpack "^2.0.0"
     quickselect "^2.0.0"
     rw "^1.3.3"
-    supercluster "^7.1.5"
+    serialize-to-js "^3.1.2"
+    supercluster "^8.0.0"
     tinyqueue "^2.0.3"
+    tweakpane "^4.0.3"
     vt-pbf "^3.1.3"
 
 mdn-data@2.0.14:
@@ -6343,6 +6363,11 @@ serialize-javascript@^6.0.0, serialize-javascript@^6.0.1:
   dependencies:
     randombytes "^2.1.0"
 
+serialize-to-js@^3.1.2:
+  version "3.1.2"
+  resolved "https://registry.yarnpkg.com/serialize-to-js/-/serialize-to-js-3.1.2.tgz#844b8a1c2d72412f68ea30da55090b3fc8e95790"
+  integrity sha512-owllqNuDDEimQat7EPG0tH7JjO090xKNzUtYz6X+Sk2BXDnOCilDdNLwjWeFywG9xkJul1ULvtUQa9O4pUaY0w==
+
 serve-index@^1.9.1:
   version "1.9.1"
   resolved "https://registry.npmmirror.com/serve-index/-/serve-index-1.9.1.tgz#d3768d69b1e7d82e5ce050fff5b453bea12a9239"
@@ -6663,12 +6688,12 @@ stylehacks@^5.1.1:
     browserslist "^4.21.4"
     postcss-selector-parser "^6.0.4"
 
-supercluster@^7.1.5:
-  version "7.1.5"
-  resolved "https://registry.yarnpkg.com/supercluster/-/supercluster-7.1.5.tgz#65a6ce4a037a972767740614c19051b64b8be5a3"
-  integrity sha512-EulshI3pGUM66o6ZdH3ReiFcvHpM3vAigyK+vcxdjpJyEbIIrtbmBdY23mGgnI24uXiGFvrGq9Gkum/8U7vJWg==
+supercluster@^8.0.0:
+  version "8.0.1"
+  resolved "https://registry.yarnpkg.com/supercluster/-/supercluster-8.0.1.tgz#9946ba123538e9e9ab15de472531f604e7372df5"
+  integrity sha512-IiOea5kJ9iqzD2t7QJq/cREyLHTtSmUT6gQsweojg9WH2sYJqZK9SswTu6jrscO6D1G5v5vYZ9ru/eq85lXeZQ==
   dependencies:
-    kdbush "^3.0.0"
+    kdbush "^4.0.2"
 
 supports-color@^2.0.0:
   version "2.0.0"
@@ -6887,6 +6912,11 @@ tsutils@^2.29.0:
   integrity sha512-g5JVHCIJwzfISaXpXE1qvNalca5Jwob6FjI4AoPlqMusJ6ftFE7IkkFoMhVLRgK+4Kx3gkzb8UZK5t5yTTvEmA==
   dependencies:
     tslib "^1.8.1"
+
+tweakpane@^4.0.3:
+  version "4.0.3"
+  resolved "https://registry.yarnpkg.com/tweakpane/-/tweakpane-4.0.3.tgz#6bb8a24706916a33d59ab0e478c2a66a9928fc60"
+  integrity sha512-BlcWOAe8oe4c+k9pmLBARGdWB6MVZMszayekkixQXTgkxTaYoTUpHpwVEp+3HkoamZkomodpbBf0CkguIHTgLg==
 
 type-check@^0.4.0, type-check@~0.4.0:
   version "0.4.0"

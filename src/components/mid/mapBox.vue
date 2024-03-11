@@ -5,6 +5,7 @@
 <script setup lang="ts">
 import mapboxgl from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
+import MapboxLanguage from '@mapbox/mapbox-gl-language';
 import { onMounted, reactive, toRaw, inject, onBeforeUnmount } from 'vue';
 import axios from 'axios';
 import * as d3 from 'd3';
@@ -36,7 +37,7 @@ function Map() {
       // item.properties.color = colors[index]
     })
 
-    mapboxgl.accessToken = 'pk.eyJ1IjoiZWFzb25samsiLCJhIjoiY2xpMTQ4dDB3MXU2cDNkbXd6ZmlyNjgwZyJ9.H9xtQwGfuWDYsmVZHwMXAg';
+    mapboxgl.accessToken = 'pk.eyJ1IjoiZWFzb25samsiLCJhIjoiY2x0ZTBueXZ6MGJrczJ3cWwxaGRjcml2bSJ9._1-4RKjhaguCL9zMXxl_bQ';
     const map = new mapboxgl.Map({
       container: 'map',
       // Choose from Mapbox's core styles, or make your own style with Mapbox Studio
@@ -45,6 +46,10 @@ function Map() {
       zoom: 3,
       logoPosition: 'bottom-right',
     });
+
+    map.addControl(new MapboxLanguage({
+      defaultLanguage: 'zh-Hans'
+    }));
 
     //绘制中国地图
     map.on('load', () => {
@@ -57,7 +62,7 @@ function Map() {
         },
         layout: {},
         paint: {
-          'fill-color': '#B0C4DE',
+          'fill-color': '#E0FFFF',
           'fill-opacity': 0.8
         }
       });
@@ -74,6 +79,27 @@ function Map() {
         paint: {
           // 'fill-color': ['get', 'color'],
           'fill-opacity': 0.4
+        }
+      });
+
+      // 添加省份名称文本图层
+      map.addLayer({
+        id: 'province-label',
+        type: 'symbol',
+        source: {
+          type: 'geojson',
+          data: obj.province_geo  // 使用同样的省份 GeoJSON 数据
+        },
+        layout: {
+          'text-field': ['get', 'name'], // 假设每个省份的名称存储在属性 'name' 中
+          'text-size': 10,  // 文本大小
+          'text-transform': 'uppercase',  // 文本转换为大写
+          'text-anchor': 'center',  // 文本锚点在中心
+          'text-offset': [0, 0]  // 文本偏移，用于调整文本位置
+        },
+        paint: {
+          'text-color': '#000000',  // 文本颜色
+          'text-opacity': 0.85  // 文本透明度
         }
       });
 

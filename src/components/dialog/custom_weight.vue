@@ -559,4 +559,4 @@ input {
     /* 设置鼠标样式为手型 */
     margin-top: -10px;
 }
-</style>
+</style>./custom_weights.vue
